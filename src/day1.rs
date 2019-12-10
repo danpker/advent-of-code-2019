@@ -1,36 +1,24 @@
-use std::io::{self, Read};
-
-fn main() {
-    let mut input = String::new();
-    io::stdin().read_to_string(&mut input).unwrap();
-
-    part_one(&input);
-    part_two(&input);
+#[aoc_generator(day1)]
+fn parse_input_day1(input: &str) -> Vec<i32> {
+    input.lines().map(|line| line.parse().unwrap()).collect()
 }
 
-fn part_one(input_lines: &str) {
-    let mut total = 0;
-    for line in input_lines.lines() {
-        let parsed_line = line.parse::<i64>().unwrap();
-        total += fuel_requirement(parsed_line);
-    }
-
-    println!("Part One: {}", total);
+#[aoc(day1, part1)]
+fn part_one(input: &[i32]) -> i32 {
+    input.iter().map(|x| fuel_requirement(*x)).sum()
 }
 
-fn part_two(input_lines: &str) {
-    let mut total = 0;
-    for line in input_lines.lines() {
-        let parsed_line = line.parse::<i64>().unwrap();
-        total += fuel_requirement_including_fuel(parsed_line);
-    }
-
-    println!("Part Two: {}", total);
+#[aoc(day1, part2)]
+fn part_two(input: &[i32]) -> i32 {
+    input
+        .iter()
+        .map(|x| fuel_requirement_including_fuel(*x))
+        .sum()
 }
 
 /// Fuel required to launch a given module is based on its mass. Specifically, to find the fuel
 /// required for a module, take its mass, divide by three, round down, and subtract 2.
-fn fuel_requirement(mass: i64) -> i64 {
+fn fuel_requirement(mass: i32) -> i32 {
     (mass / 3) - 2
 }
 
@@ -40,7 +28,7 @@ fn fuel_requirement(mass: i64) -> i64 {
 /// finding out the fuel required for that amount using the same calculation.
 /// This happens recursively until zero or negative fuel is required for the previous
 /// fuel amount.
-fn fuel_requirement_including_fuel(mass: i64) -> i64 {
+fn fuel_requirement_including_fuel(mass: i32) -> i32 {
     let starting_fuel = fuel_requirement(mass);
 
     if starting_fuel <= 0 {
